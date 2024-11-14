@@ -7,7 +7,6 @@ import com.li.utils.JDBCUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,7 +18,7 @@ public class ClassDaoImpl implements ClassDao {
 
         try {
             connection = JDBCUtil.getConnection();
-            String sql = "insert into class (name, studentMaxCount, classAddress, creatorId) values (?, ?, ?, ?);";
+            String sql = "insert into class (name, student_max_count, class_address, creator_id) values (?, ?, ?, ?);";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, clazz.getName());
             preparedStatement.setInt(2, clazz.getStudentMaxCount());
@@ -44,7 +43,7 @@ public class ClassDaoImpl implements ClassDao {
 
         try {
             connection = JDBCUtil.getConnection();
-            String sql = "select * from class where creatorId = ? or isClassOver = false;";
+            String sql = "select * from class where creator_id = ? or is_class_over = false;";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
@@ -55,10 +54,10 @@ public class ClassDaoImpl implements ClassDao {
                 Clazz clazz = new Clazz();
                 clazz.setId(resultSet.getInt("id"));
                 clazz.setName(resultSet.getString("name"));
-                clazz.setStudentCount(resultSet.getInt("studentCount"));
-                clazz.setStudentMaxCount(resultSet.getInt("studentMaxCount"));
-                clazz.setClassAddress(resultSet.getString("classAddress"));
-                clazz.setCreatorId(resultSet.getInt("creatorId"));
+                clazz.setStudentCount(resultSet.getInt("student_count"));
+                clazz.setStudentMaxCount(resultSet.getInt("student_max_count"));
+                clazz.setClassAddress(resultSet.getString("class_address"));
+                clazz.setCreatorId(resultSet.getInt("creator_id"));
                 list.add(clazz);
             }
 
@@ -86,14 +85,14 @@ public class ClassDaoImpl implements ClassDao {
             Integer maxCount = 0;
             Integer count = 0;
             while (resultSet.next()) {
-                maxCount = resultSet.getInt("studentMaxCount");
-                count = resultSet.getInt("studentCount");
+                maxCount = resultSet.getInt("student_max_count");
+                count = resultSet.getInt("student_count");
             }
             if (count >= maxCount) {
                 return false;
             }
 
-            String sql2 = "insert into student (studentId, name) values (?, ?);";
+            String sql2 = "insert into student (student_id, name) values (?, ?);";
             preparedStatement = connection.prepareStatement(sql2, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, student.getStudentId());
             preparedStatement.setString(2, student.getName());
@@ -110,7 +109,7 @@ public class ClassDaoImpl implements ClassDao {
             if (generatedKeys.next()) {
                 studentId = generatedKeys.getInt(1);
             }
-            String sql3 = "insert into class_student (classId, studentId) values (?, ?);";
+            String sql3 = "insert into class_student (class_id, student_id) values (?, ?);";
             preparedStatement = connection.prepareStatement(sql3);
             preparedStatement.setInt(1, classId);
             preparedStatement.setInt(2, studentId);
@@ -122,9 +121,9 @@ public class ClassDaoImpl implements ClassDao {
                 return false;
             }
 
-            String sql4 = "update class set studentCount = studentCount + 1 where id = ?;";
+            String sql4 = "update class set student_count = student_count + 1 where id = ?;";
             preparedStatement = connection.prepareStatement(sql4);
-            preparedStatement.setInt(1, studentId);
+            preparedStatement.setInt(1, classId);
             int i3 = preparedStatement.executeUpdate();
 
             resultSet.close();
@@ -143,7 +142,7 @@ public class ClassDaoImpl implements ClassDao {
         ResultSet resultSet;
         try {
             connection = JDBCUtil.getConnection();
-            String sql = "select * from student where id = (select studentId from class_student where classId = ?);";
+            String sql = "select * from student where id = (select student_id from class_student where class_id = ?);";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, classId);
             resultSet = preparedStatement.executeQuery();
@@ -153,7 +152,7 @@ public class ClassDaoImpl implements ClassDao {
             while (resultSet.next()) {
                 Student student = new Student();
                 student.setId(resultSet.getInt("id"));
-                student.setStudentId(resultSet.getString("studentId"));
+                student.setStudentId(resultSet.getString("student_id"));
                 student.setName(resultSet.getString("name"));
                 list.add(student);
             }
@@ -173,7 +172,7 @@ public class ClassDaoImpl implements ClassDao {
         PreparedStatement preparedStatement;
         try {
             connection = JDBCUtil.getConnection();
-            String sql = "delete from student where studentId = ? and name = ? and id = (select studentId from class_student where classId = ?);";
+            String sql = "delete from student where student_id = ? and name = ? and id = (select student_id from class_student where class_id = ?);";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, studentId);
             preparedStatement.setString(2, name);
@@ -185,7 +184,7 @@ public class ClassDaoImpl implements ClassDao {
                 JDBCUtil.release();
                 return false;
             }
-            String sql2 = "update class set studentCount = studentCount - 1 where id = ?;";
+            String sql2 = "update class set student_count = student_count - 1 where id = ?;";
             preparedStatement = connection.prepareStatement(sql2);
             preparedStatement.setInt(1, classId);
             int i2 = preparedStatement.executeUpdate();
@@ -213,12 +212,12 @@ public class ClassDaoImpl implements ClassDao {
             while (resultSet.next()) {
                 clazz = new Clazz();
                 clazz.setId(resultSet.getInt("id"));
-                clazz.setCreatorId(resultSet.getInt("creatorId"));
+                clazz.setCreatorId(resultSet.getInt("creator_id"));
                 clazz.setName(resultSet.getString("name"));
-                clazz.setStudentCount(resultSet.getInt("studentCount"));
-                clazz.setStudentMaxCount(resultSet.getInt("studentMaxCount"));
-                clazz.setClassAddress(resultSet.getString("classAddress"));
-                clazz.setIsClassOver(resultSet.getBoolean("isClassOver"));
+                clazz.setStudentCount(resultSet.getInt("student_count"));
+                clazz.setStudentMaxCount(resultSet.getInt("student_max_count"));
+                clazz.setClassAddress(resultSet.getString("class_address"));
+                clazz.setIsClassOver(resultSet.getBoolean("is_class_over"));
                 clazz.setEvaluate(resultSet.getString("evaluate"));
             }
             if (clazz == null) {
@@ -233,7 +232,7 @@ public class ClassDaoImpl implements ClassDao {
                 //  已经结课的班级不能再次结课
                 return 3;
             }
-            String sql2 = "update class set isClassOver = true, evaluate = ? where name = ?;";
+            String sql2 = "update class set is_class_over = true, evaluate = ? where name = ?;";
             preparedStatement = connection.prepareStatement(sql2);
             preparedStatement.setString(1, evaluate);
             preparedStatement.setString(2, name);
@@ -257,7 +256,7 @@ public class ClassDaoImpl implements ClassDao {
         PreparedStatement preparedStatement;
         try {
             connection = JDBCUtil.getConnection();
-            String sql = "update class set studentMaxCount = ?, classAddress = ? where name = ?;";
+            String sql = "update class set student_max_count = ?, class_address = ? where name = ?;";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, clazz.getStudentMaxCount());
             preparedStatement.setString(2, clazz.getClassAddress());

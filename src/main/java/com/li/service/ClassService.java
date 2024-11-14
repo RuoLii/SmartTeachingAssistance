@@ -7,6 +7,7 @@ import com.li.utils.Result;
 public interface ClassService {
     /**
      * 创建班级
+     *
      * @param c 班级
      * @return 处理结果
      */
@@ -14,6 +15,7 @@ public interface ClassService {
 
     /**
      * 获取所有班级列表
+     *
      * @return 处理结果
      */
     Result getClassList(Integer id);
@@ -26,7 +28,8 @@ public interface ClassService {
 
     /**
      * 根据班级名结课
-     * @param name 班级名称
+     *
+     * @param name     班级名称
      * @param evaluate 评价内容
      * @return 处理结果
      */
@@ -34,6 +37,7 @@ public interface ClassService {
 
     /**
      * 根据班级名修改班级
+     *
      * @param c 修改后的班级
      * @return 处理结果
      */

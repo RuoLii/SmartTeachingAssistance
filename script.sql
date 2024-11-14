@@ -27,7 +27,7 @@ VALUES (2, 'admin', '1', '1', '13777459989', '1069121098@qq.com');
 CREATE TABLE student
 (
     id        INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    studentId VARCHAR(50) UNIQUE             NOT NULL,
+    student_id VARCHAR(50) UNIQUE             NOT NULL,
     name      VARCHAR(50)                    NOT NULL
 ) COMMENT = '学生表';
 
@@ -35,31 +35,31 @@ CREATE TABLE student
 CREATE TABLE class
 (
     id              INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    creatorId       INT                            NOT NULL,
+    creator_id       INT                            NOT NULL,
     name            VARCHAR(50) UNIQUE             NOT NULL,
-    studentCount    INT     DEFAULT 0,
-    studentMaxCount Int                            NOT NULL,
-    classAddress    VARCHAR(255)                   NOT NULL,
-    isClassOver     BOOLEAN DEFAULT FALSE,
+    student_count    INT     DEFAULT 0,
+    student_max_count Int                            NOT NULL,
+    class_address    VARCHAR(255)                   NOT NULL,
+    is_class_over     BOOLEAN DEFAULT FALSE,
     evaluate        VARCHAR(255),
-    FOREIGN KEY (creatorId) REFERENCES user (id) ON DELETE CASCADE
+    FOREIGN KEY (creator_id) REFERENCES user (id) ON DELETE CASCADE
 ) COMMENT = '班级表';
 
 -- 插入班级数据
-INSERT INTO class (id, creatorId, name, studentMaxCount, classAddress, isClassOver)
+INSERT INTO class (id, creator_id, name, student_max_count, class_address, is_class_over)
 VALUES (1, 1, 'java1班', 50, 'A6E501', FALSE);
-INSERT INTO class (creatorId, name, studentCount, studentMaxCount, classAddress, isClassOver)
+INSERT INTO class (creator_id, name, student_count, student_max_count, class_address, is_class_over)
 VALUES (2, 'java2班', 0, 50, 'A6E502', FALSE);
 
 
 -- 创建班级与学生关联表
 CREATE TABLE class_student
 (
-    classId   INT NOT NULL,
-    studentId INT NOT NULL,
-    PRIMARY KEY (classId, studentId),
-    FOREIGN KEY (classId) REFERENCES class (id) ON DELETE CASCADE,
-    FOREIGN KEY (studentId) REFERENCES student (id) ON DELETE CASCADE
+    class_id   INT NOT NULL,
+    student_id INT NOT NULL,
+    PRIMARY KEY (class_id, student_id),
+    FOREIGN KEY (class_id) REFERENCES class (id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE CASCADE
 ) COMMENT = '班级与学生关联表';
 
 
@@ -70,13 +70,23 @@ CREATE TABLE tag
     name VARCHAR(50)                    NOT NULL
 ) COMMENT = '标签表';
 
+INSERT INTO tag (id, name)
+VALUES (1, 'Java');
+
+
 -- 创建课程表
 CREATE TABLE course
 (
     id        INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     name      VARCHAR(50)                    NOT NULL,
-    tagId     INT                            NOT NULL,
-    startTime DATETIME                       NOT NULL,
-    endTime   DATETIME,
-    FOREIGN KEY (tagId) REFERENCES tag (id) ON DELETE CASCADE
+    tag_id     INT                            NOT NULL,
+    start_time DATETIME                       NOT NULL,
+    end_time   DATETIME,
+    create_user_id INT NOT NULL ,
+    FOREIGN KEY (tag_id) REFERENCES tag (id) ON DELETE CASCADE,
+    FOREIGN KEY (create_user_id) REFERENCES user (id) ON DELETE CASCADE
 ) COMMENT = '课程表';
+
+INSERT INTO course (name, tag_id, start_time, end_time, create_user_id)
+VALUES ('程序语言设计', 1, NOW(), null, 2),
+       ('程序语言设计', 1, NOW(), NOW(), 2)

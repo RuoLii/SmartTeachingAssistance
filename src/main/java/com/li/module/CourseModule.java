@@ -1,11 +1,13 @@
 package com.li.module;
 
+import com.li.dto.CourseDTO;
 import com.li.po.Clazz;
 import com.li.po.Course;
 import com.li.service.CourseService;
 import com.li.service.impl.CourseServiceImpl;
 import com.li.utils.Result;
 
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -48,7 +50,7 @@ public class CourseModule {
         String courseName = in.next();
         System.out.println("请输入标签名称: ");
         String tagName = in.next();
-        Result res = courseService.createCourse(courseName, tagName);
+        Result res = courseService.createCourse(courseName, tagName, LoginModule.getLoginUser().getId());
         System.out.println(res.getMsg());
     }
 
@@ -56,13 +58,26 @@ public class CourseModule {
      * 课程列表展示
      */
     private static void courseListShow() {
-
+        while (true) {
+            System.out.println("*********  欢迎来到课程列表展示  *********");
+            List<CourseDTO> courseList = (List<CourseDTO>) courseService.selectCourseByCreateUserId(LoginModule.getLoginUser().getId()).getData();
+            for (int i = 1; i <= courseList.size(); i++) {
+                CourseDTO course = courseList.get(i - 1);
+                System.out.print(i + "——>课程名称: " + course.getName() + "；标签名称: " + course.getTagName() + "；创建时间: " + course.getStartTime());
+                if (course.getEndTime() != null) System.out.print("；修改时间: " + course.getEndTime());
+                System.out.println();
+            }
+            System.out.println("输出 -1 返回主菜单");
+            int op = in.nextInt();
+            if (op == -1) break;
+        }
     }
 
     /**
      * 标签管理
      */
     private static void tagManager() {
+        System.out.println("*********  欢迎来到标签管理  *********");
 
     }
 
@@ -70,6 +85,7 @@ public class CourseModule {
      * 修改课程信息
      */
     private static void updateCourse() {
+        System.out.println("*********  欢迎来到修改课程信息  *********");
 
     }
 }

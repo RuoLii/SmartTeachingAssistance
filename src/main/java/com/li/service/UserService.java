@@ -6,7 +6,8 @@ import com.li.utils.Result;
 public interface UserService {
     /**
      * 处理用户登录
-     * @param account 账号
+     *
+     * @param account  账号
      * @param password 密码
      * @return 处理结果
      */
@@ -14,6 +15,7 @@ public interface UserService {
 
     /**
      * 处理用户注册
+     *
      * @param user 用户 po
      * @return 处理结果
      */
@@ -21,6 +23,7 @@ public interface UserService {
 
     /**
      * 处理用户忘记密码
+     *
      * @param user 用户 po
      * @return 处理结果
      */
