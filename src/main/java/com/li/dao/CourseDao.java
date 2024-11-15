@@ -1,6 +1,5 @@
 package com.li.dao;
 
-import com.li.dto.CourseDTO;
 import com.li.po.Course;
 
 import java.util.List;
@@ -26,4 +25,11 @@ public interface CourseDao {
      * @return 课程列表
      */
     List<Course> selectCourseByCreateUserId(Integer userId);
+
+    /**
+     * 修改课程
+     * @param course 课程实体类
+     * @return 是否修改成功
+     */
+    Boolean updateCourse(Course course);
 }

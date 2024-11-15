@@ -56,4 +56,23 @@ public class CourseServiceImpl implements CourseService {
         });
         return new Result(true, "", courseDTOList);
     }
+
+    @Override
+    public Result updateCourseInfo(String courseName, String tagName) {
+        Course course = courseDao.selectCourseByName(courseName);
+        if (course == null) {
+            return new Result(false, "课程名不存在！", null);
+        }
+        Tag tag = tagDao.selectTagByName(tagName);
+        if (tag == null) {
+            return new Result(false, "标签名不存在！", null);
+        }
+
+        course.setTagId(tag.getId());
+
+        if (courseDao.updateCourse(course)) {
+            return new Result(true, "修改成功！", null);
+        }
+        return new Result(false, "修改失败！", null);
+    }
 }

@@ -107,4 +107,27 @@ public class CourseDaoImpl implements CourseDao {
         }
         return courseList;
     }
+
+    @Override
+    public Boolean updateCourse(Course course) {
+        Connection connection;
+        PreparedStatement preparedStatement;
+
+        try {
+            connection = JDBCUtil.getConnection();
+            String sql = "update course set tag_id = ? where id = ?;";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, course.getTagId());
+            preparedStatement.setInt(2, course.getId());
+
+            int i = preparedStatement.executeUpdate();
+
+            preparedStatement.close();
+            JDBCUtil.release();
+
+            return i > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

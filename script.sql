@@ -26,22 +26,22 @@ VALUES (2, 'admin', '1', '1', '13777459989', '1069121098@qq.com');
 -- 创建学生表
 CREATE TABLE student
 (
-    id        INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    id         INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     student_id VARCHAR(50) UNIQUE             NOT NULL,
-    name      VARCHAR(50)                    NOT NULL
+    name       VARCHAR(50)                    NOT NULL
 ) COMMENT = '学生表';
 
 -- 创建班级表
 CREATE TABLE class
 (
-    id              INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    creator_id       INT                            NOT NULL,
-    name            VARCHAR(50) UNIQUE             NOT NULL,
-    student_count    INT     DEFAULT 0,
+    id                INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    creator_id        INT                            NOT NULL,
+    name              VARCHAR(50) UNIQUE             NOT NULL,
+    student_count     INT     DEFAULT 0,
     student_max_count Int                            NOT NULL,
-    class_address    VARCHAR(255)                   NOT NULL,
+    class_address     VARCHAR(255)                   NOT NULL,
     is_class_over     BOOLEAN DEFAULT FALSE,
-    evaluate        VARCHAR(255),
+    evaluate          VARCHAR(255),
     FOREIGN KEY (creator_id) REFERENCES user (id) ON DELETE CASCADE
 ) COMMENT = '班级表';
 
@@ -66,23 +66,25 @@ CREATE TABLE class_student
 -- 创建标签表
 CREATE TABLE tag
 (
-    id   INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    name VARCHAR(50)                    NOT NULL
+    id          INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    name        VARCHAR(50)                    NOT NULL,
+    create_time DATETIME                       NOT NULL
 ) COMMENT = '标签表';
 
-INSERT INTO tag (id, name)
-VALUES (1, 'Java');
-
+INSERT INTO tag (id, name, create_time)
+VALUES (1, 'Java', now());
+INSERT INTO tag (id, name, create_time)
+VALUES (2, 'Python', now());
 
 -- 创建课程表
 CREATE TABLE course
 (
-    id        INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    name      VARCHAR(50)                    NOT NULL,
-    tag_id     INT                            NOT NULL,
-    start_time DATETIME                       NOT NULL,
-    end_time   DATETIME,
-    create_user_id INT NOT NULL ,
+    id             INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    name           VARCHAR(50)                    NOT NULL,
+    tag_id         INT                            NOT NULL,
+    start_time     DATETIME                       NOT NULL,
+    end_time       DATETIME,
+    create_user_id INT                            NOT NULL,
     FOREIGN KEY (tag_id) REFERENCES tag (id) ON DELETE CASCADE,
     FOREIGN KEY (create_user_id) REFERENCES user (id) ON DELETE CASCADE
 ) COMMENT = '课程表';
