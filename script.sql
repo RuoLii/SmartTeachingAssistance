@@ -1,4 +1,6 @@
 -- 删除已存在的表
+DROP TABLE IF EXISTS question;
+DROP TABLE IF EXISTS knowledge_point;
 DROP TABLE IF EXISTS class_student;
 DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS tag;
@@ -91,4 +93,42 @@ CREATE TABLE course
 
 INSERT INTO course (name, tag_id, start_time, end_time, create_user_id)
 VALUES ('程序语言设计', 1, NOW(), null, 2),
-       ('程序语言设计', 1, NOW(), NOW(), 2)
+       ('计算机网络', 2, NOW(), NOW(), 1),
+       ('计算机组成原理', 1, NOW(), NOW(), 2)
+
+-- 创建知识点表
+CREATE TABLE knowledge_point
+(
+    id             INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    content        VARCHAR(100)                   NOT NULL,
+    create_time    DATETIME                       NOT NULL,
+    create_user_id INT                            NOT NULL,
+    FOREIGN KEY (create_user_id) REFERENCES user (id) ON DELETE CASCADE
+) COMMENT = '知识点表';
+
+INSERT INTO knowledge_point (id, content, create_time, create_user_id)
+VALUES (1, 'C++烤串', now(), 2),
+       (2, 'Java炒粉', now(), 1),
+       (3, 'Python炒饭', now(), 2)
+
+-- 创建试题资源表
+CREATE TABLE question
+(
+    id                 INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    knowledge_point_id INT                            NOT NULL,
+    title              VARCHAR(500)                   NOT NULL,
+    option_a           VARCHAR(500)                   NOT NULL,
+    option_b           VARCHAR(500)                   NOT NULL,
+    option_c           VARCHAR(500)                   NOT NULL,
+    option_d           VARCHAR(500)                   NOT NULL,
+    correct_option     CHAR(1)                        NOT NULL CHECK ( correct_option IN ('A', 'B', 'C', 'D') ),
+    create_time        DATETIME                       NOT NULL,
+    create_user_id     INT                            NOT NULL,
+    FOREIGN KEY (create_user_id) REFERENCES user (id) ON DELETE CASCADE,
+    FOREIGN KEY (knowledge_point_id) REFERENCES knowledge_point (id) ON DELETE CASCADE
+) COMMENT = '试题资源表';
+
+INSERT INTO question (knowledge_point_id, title, option_a, option_b, option_c, option_d, correct_option, create_time,
+                      create_user_id)
+VALUES (1, 'C++为什么高人一等', 'C++是世界上最好的语言.java', 'C++是世界上最好的语言.cpp', 'C++是世界上最好的语言.py',
+        'C++是世界上最好的语言.js', 'B', now(), 2)

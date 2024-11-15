@@ -10,9 +10,10 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Tag {
+public class KnowledgePoint {
     private Integer id;
-    private String name;
+    private String content;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/shanghai")
     private Date createTime;
+    private Integer createUserId;
 }
